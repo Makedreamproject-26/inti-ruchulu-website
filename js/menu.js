@@ -1,8 +1,10 @@
-const container = document.getElementById("menuContainer");
+const container=document.getElementById("menuContainer");
+
+let cart=getCart();
 
 menuItems.forEach(item=>{
 
-container.innerHTML += `
+container.innerHTML+=`
 
 <div class="food-card">
 
@@ -22,15 +24,17 @@ container.innerHTML += `
 
 <div class="qty">
 
-<button>-</button>
+<button onclick="decrease(${item.id})">-</button>
 
-<span>1</span>
+<span id="qty${item.id}">1</span>
 
-<button>+</button>
+<button onclick="increase(${item.id})">+</button>
 
 </div>
 
-<button class="add-cart">
+<button class="add-cart"
+
+onclick="addCart(${item.id})">
 
 🛒 Add To Cart
 
@@ -44,5 +48,65 @@ container.innerHTML += `
 
 });
 
+let quantities={};
 
+menuItems.forEach(item=>{
+
+quantities[item.id]=1;
+
+});
+
+function increase(id){
+
+quantities[id]++;
+
+document.getElementById("qty"+id).innerText=quantities[id];
+
+}
+
+function decrease(id){
+
+if(quantities[id]>1){
+
+quantities[id]--;
+
+document.getElementById("qty"+id).innerText=quantities[id];
+
+}
+
+}
+
+function addCart(id){
+
+const food=menuItems.find(x=>x.id===id);
+
+const existing=cart.find(x=>x.id===id);
+
+if(existing){
+
+existing.qty+=quantities[id];
+
+}
+
+else{
+
+cart.push({
+
+id:food.id,
+
+name:food.name,
+
+price:food.price,
+
+qty:quantities[id]
+
+});
+
+}
+
+saveCart(cart);
+
+alert(food.name+" Added Successfully ❤️");
+
+}
 
